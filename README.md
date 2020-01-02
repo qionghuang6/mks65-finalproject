@@ -49,20 +49,20 @@ b4 a4 g4 r
 Each text file will be converted into a list of notes. 
 
 ## Timeline:
-January 6: 
+##### January 6: 
 - Qiong: Research networking and get computers connected
 - Kevin: Handle where to store notes/ general structure of the structs
 - Eric: Handle aplay and processes
-January 10
+##### January 10
 - Qiong: Send notes and begin implementing semaphore system
 - Kevin: Integrate data structure of notes with aplay
 - Eric: Complete filehandler 
-January 13: System Integration 
+##### January 13: System Integration 
 - Qiong: Finish semaphore system to play chords
 - Kevin: Integrate filehandler with aplay
 - Eric: Integrate aplay with networking
-January 15
+##### January 15
 - Final draft deadline
 - Bug fixes
-January 17
+##### January 17
 - Project submission deadline
