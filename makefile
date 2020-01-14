@@ -1,5 +1,5 @@
-server: mainserver.o networking.o
-	gcc -o server mainserver.o networking.o
+server: mainserver.o networking.o storage.o
+	gcc -o server mainserver.o networking.o storage.o
 
 client: client.o networking.o
 	gcc -o client client.o networking.o
@@ -12,6 +12,9 @@ mainserver.o: mainserver.c networking.h
 
 networking.o: networking.c networking.h
 	gcc -c networking.c
+
+storage.o: notes.c
+	gcc -c notes.c
 
 clean:
 	rm *.o
