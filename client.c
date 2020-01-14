@@ -11,10 +11,6 @@ int main(int argc, char **argv) {
     server_socket = client_setup( TEST_IP );
 
   while (1) {
-    printf("enter data: ");
-    fgets(buffer, sizeof(buffer), stdin);
-    *strchr(buffer, '\n') = 0;
-    write(server_socket, buffer, sizeof(buffer));
     read(server_socket, buffer, sizeof(buffer));
     printf("received: [%s]\n", buffer);
   }
