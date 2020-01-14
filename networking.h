@@ -8,12 +8,13 @@
 #include <netdb.h>
 #include <string.h>
 #include <errno.h>
+#include <sys/wait.h>
 
 #ifndef NETWORKING_H
 #define NETWORKING_H
 
 #define BUFFER_SIZE 256
-#define PORT "9001"
+#define PORT "32498"
 #define TEST_IP "127.0.0.1"
 
 void error_check(int i, char *s);
