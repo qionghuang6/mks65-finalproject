@@ -14,10 +14,8 @@ Our project is to create a computer orchestra. A user will feed a piece of “sh
 - The program will read and parse each piece of sheet music using read().  
 ### Processes
 - The aplay command will be used to play each note. For each call of aplay, a new child process will be forked. 
-### Semaphores
-- Semaphores will be used to ensure that only the specified number of notes is being played at the same time.
-  - For example, a semaphore value of 3 will allow 3 notes to play at the same time.
-  - A semaphore value of 0 means no new notes can be played at the time
+### Signals
+- Signals will be used to stop to manage the aplay command
 ### Networking
 - The program will use networking to connect to other computers to tell them what notes to play
 - Each computer will be able to pause the music by telling the main computer to stop
