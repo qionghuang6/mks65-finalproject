@@ -29,7 +29,7 @@ Chords
 ### Cmaj
 ```
 \instrument piano
-c4e4g4
+c4-e4-g4
 ```
 
 ### Hot Cross Buns
