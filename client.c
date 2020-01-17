@@ -13,5 +13,7 @@ int main(int argc, char **argv) {
   while (1) {
     read(server_socket, buffer, sizeof(buffer));
     printf("received: [%s]\n", buffer);
+    char writestring[256] = "recieved";
+    write(server_socket, writestring, sizeof(writestring));
   }
 }

@@ -6,13 +6,13 @@
 #include <wait.h>
 
 char ** parse_args( char * line ){
-  char ** args = calloc(32, sizeof(char *));
+  char ** args = calloc(50, sizeof(char *));
   size_t argno = 0;
   char * token = "";
-  while(line != NULL && argno < 32){
-    args[argno] = calloc(1,32);
+  while(line != NULL && argno < 50){
+    args[argno] = calloc(1,50);
     token = strsep(&line, " ");
-    strncpy(args[argno], token, 32);
+    strncpy(args[argno], token, 50);
     argno++;
   }
   return args;
@@ -25,16 +25,16 @@ int execute_note(char* line){
     return 0;
 }
 
-  char s[100];
+  char s[150];
 int metronome(){
-  strncat(s, "aplay Piano/Piano.ff.C4.wav", 30);
+  strncat(s, "aplay AltoSax/AltoSax.vib.ff.C4.stereo.wav", 50);
   printf("%s\n", s);
   while(1){
     pid_t p = fork();
     if (!p){
       execute_note(s);
     }
-    sleep(1);
+    sleep(2);
   }
   return 0;    
 }
