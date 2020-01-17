@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <parser.c>
 char ** parse_args( char * line ){
   char *token;
   char **out = malloc(strlen(line) * sizeof(char *));
@@ -12,6 +13,9 @@ char ** parse_args( char * line ){
     i++;
   }
   return out;
+}
+char * read_file(char * dir){
+
 }
 int main(int argc, char * argv[]){
   char input[256] = "";
@@ -30,7 +34,7 @@ int main(int argc, char * argv[]){
   }
   input[strlen(input)-1] = '\0';
   char ** test = parse_args(input);
-
+  struct Song** main_song = 0;
 
   return 0;
 }
