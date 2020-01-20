@@ -3,26 +3,57 @@
 void process(char *s);
 void subserver(int from_client);
 
-static void sighandler(int signo) {
-	if (signo == SIGINT){
-		printf("trying to pause or play");
-  }else{
-		printf("YEET\n" );
-	}
+char ** parse_args( char * line ){
+  char *token;
+  char **out = malloc(strlen(line) * sizeof(char *));
+  int i = 0;
+  while(line){
+    char * tmp = strsep(&line," ");
+    out[i] = tmp;
+    i++;
+  }
+  return out;
+}
+char * read_file(char * dir){
+
 }
 
 int main(int argc, char const *argv[]) {
   int instruments;
   int connected;
   int listen_socket;
-  int f;
+	int rv;
   int client_sockets[64];
   int clientnum = 0;
-  char buffer[BUFFER_SIZE];
   int time = 0;
   int paused = 0;
   int songchoice = -1;
   int songpossibilities = 2;
+	int playstate = 1;
+
+	void sighandler(int signo) {
+	if (signo == SIGINT){
+		printf("Interruption\n");
+		if(playstate == 1){
+				printf("PAUSING\n");
+				playstate = 0;
+				for(size_t i = 0; i < instruments; i++) {
+				//write(client_sockets[i], "PAUSING", sizeof(20));
+				}
+			} else if(playstate == 0){
+				printf("PLAYING\n");
+				playstate = 1;
+				time++;
+				for(size_t i = 0; i < instruments; i++) {
+				// write(client_sockets[i], "PLAYING", sizeof(20));
+				}
+			}
+  }
+  if(signo == SIGSTOP){
+    kill(getpid(), SIGKILL);
+  }
+}
+
 	struct timeval tv;
   fd_set read_fds;
 
@@ -31,12 +62,13 @@ int main(int argc, char const *argv[]) {
   tv.tv_usec = 500000;
 
   if(argc <= 1){
-    printf("tell me how many instruments u wanna use!\n" );
+    printf("Proper Usage: ./server [NUMBER OF INSTRUMENTS]\n" );
     return 1;
   }else{
     instruments = atoi(argv[1]);
     connected = 0;
   }
+	char buffers[BUFFER_SIZE][instruments];
   listen_socket = server_setup();
 
   while (clientnum < instruments) {
@@ -47,7 +79,6 @@ int main(int argc, char const *argv[]) {
   }
 
 	FD_ZERO(&read_fds);
-	FD_SET(STDIN_FILENO, &read_fds);
 	for (size_t i = 0; i < instruments; i++) {
 		FD_SET(client_sockets[i], &read_fds);
 	}
@@ -62,27 +93,32 @@ int main(int argc, char const *argv[]) {
       songchoice = atoi(songentered);
     }
   }
-
+	if (connected > 0){
+		for (size_t i = 0; i < instruments; i++) {
+			write(client_sockets[i], "Connection Established", 30);
+		}
+	}
   while(connected > 0){
     signal(SIGINT, sighandler);
+		if(playstate == 1){
     time++;
-    sleep(0.1);
+    sleep(1);
     char writestring[255] = "";
     sprintf(writestring, "time elapsed: %d", time);
-		select(instruments + 1, &read_fds, NULL, NULL, &tv);
-
-    if (FD_ISSET(STDIN, &read_fds)) {
-        printf("A key was pressed!\n");
-
+		rv = select(instruments + 1, &read_fds, NULL, NULL, &tv);
+		if(rv == -1) {
+			perror("select");
+		} else{
+			for(size_t i = 0; i < instruments; i++) {
+				if(FD_ISSET(client_sockets[i], &read_fds)) {
+				printf("SOMEOMEHTING LSOETHING SOMETHING\n");
+	        read(client_sockets[i], buffers[i], sizeof(buffers[i]));
+					printf("recieved: %s\n",buffers[i]);
+				}
+	      write(client_sockets[i], writestring, sizeof(writestring));
+	    }
 		}
-
-    for(size_t i = 0; i < instruments; i++) {
-			if(FD_ISSET(client_sockets[i], &read_fds)) {
-        read(client_sockets[i], buffer, sizeof(buffer));
-				printf("recieved: %s\n",buffer);
-			}
-      //write(client_sockets[i], writestring, sizeof(writestring));
-    }
   }
+}
   return 0;
 }
