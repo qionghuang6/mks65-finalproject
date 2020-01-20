@@ -13,8 +13,8 @@
 #ifndef NETWORKING_H
 #define NETWORKING_H
 
-#define BUFFER_SIZE 256
-#define PORT "32498"
+#define BUFFER_SIZE 2056
+#define PORT "32420"
 #define TEST_IP "127.0.0.1"
 #define STDIN 0
 
