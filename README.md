@@ -4,7 +4,7 @@
 Kevin Cai, Eric Chen, Qiong Huang
 
 How to Run
-Use make server and make client to compile.
+- Use make server and make client to compile.
 - Run server using:
 ./server [number of clients]
 - Run each client using:
