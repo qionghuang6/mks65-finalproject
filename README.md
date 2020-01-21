@@ -5,10 +5,11 @@ Kevin Cai, Eric Chen, Qiong Huang
 
 How to Run
 Use make server and make client to compile.
-Run server using:
+- Run server using:
 ./server [number of clients]
-Run each client using:
+- Run each client using:
 ./client [ip of server]
+- Play and Pause using Ctrl + C (Note this only works on the server), not being able to pause and play on the client is a bug
 
 Our project is to create a computer orchestra. A user will feed a piece of “sheet music” into our program. Then, the program will tell each computer to play certain notes. 
 
