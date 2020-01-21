@@ -3,93 +3,81 @@
 #include <stdio.h>
 #include "parser.h"
 
-const struct Instruments{
-  char *inst[3];
-} Instruments = {"Piano" , "Marimba", "AltoSax"};
-const int NUM_INSTRUMENTS = sizeof(Instruments.inst);
-
 char * parse_note(char * note, char * start, char * end){
   char* out = start;
   strcat(out,note);
   strcat(out,end);
   return out;
 }
-char ** parse_chord(char * chord){
-  char * counter = chord;
-  char ** chord_arr = (char **)calloc(1,sizeof(char *));
+struct Instruction* parse_chord(char * chord){
+  char *tmp = strtok(chord,"-");
+  char ** chord_arr = (char **)malloc(sizeof(char *));
   int i = 0;
-  while (*counter){
-    counter = strtok(counter,"-");
-    chord_arr[i] = counter;
-    chord_arr = (char **) realloc(i+1, sizeof(char *));
-    counter++;
+  while (tmp != NULL){
+    // printf("<%s>\n",tmp);
+    chord_arr[i] = tmp;
     i++;
+    chord_arr = (char **) realloc(chord_arr, (i+1) * sizeof(char *));
+    tmp = strtok(NULL,"-");
   }
-  return chord_arr;
+  struct Instruction ch = {chord_arr};
+  struct Instruction * out = malloc(sizeof(struct Instruction));
+  *out = ch;
+  return out;
 }
 struct Song* parse_song(char * song){
-  char ** chord_arr = (char **)calloc(1, sizeof(char *));
+  char * dup = song;
+  char *tmp = strtok_r(dup," ",&dup);
+  struct Instruction ** song_data = malloc(sizeof(struct Instruction *));
   int i = 0;
-  while(*song){
-    song = strtok(song," ");
-    chord_arr[i] = parse_chord(song);
-    chord_arr = (char **) realloc(i+1, sizeof(char *));
+  while(tmp != NULL){
+    // printf("{%s}\n",tmp);
+    song_data[i] = parse_chord(tmp);
     i++;
-    song++;
+    song_data = (struct Instruction **) realloc(song_data, (i+1) * sizeof(struct Instruction *));
+    tmp = strtok_r(dup," ",&dup);
+    // printf("%s",tmp);
   }
-  //TODO: finish this func
-  return 0;
+  return song_data;
 }
-struct Song ** parse_file(char * song){
-  struct Song ** output = (struct Song **)calloc(1, sizeof(struct Song *));
-  int i  = 0;
-  while(*song){
-    song = strtok(song, "/");
-    output[i] = parse_song(song);
-    output = (struct Song **)realloc(i+1, sizeof(struct Song *));
-    song++;
-    i++;
-  }
-  return output;
-}
-char* concat(char *s1, const char *s2)
-{
+char* concat(char *s1, const char *s2){
     char *result = malloc(strlen(s1) + strlen(s2) + 1);
     strcpy(result, s1);
     free(s1);
     strcat(result, " ");
+    // printf("%s",result);
     strncat(result, s2, strlen(s2) - 1);
     return result;
 }
 struct Song ** parseIn(char* dir){
   char buff[1024];
-  int instruments = 0;
-  struct Song** data = malloc(sizeof(struct Song*) * NUM_INSTRUMENTS);
+  int instruments = 1;
+  struct Song** data = malloc(sizeof(struct Song*));
   char* tmp = 0;
   FILE *fp;
   fp = fopen(dir, "r");
   while (fgets(buff, sizeof(buff), fp)) {
-    printf("%s",buff);
+    // printf("%s",buff);
     if(buff[0] == '\\'){
       if(tmp){
-        printf("[%s]\n", tmp);
-        //TODO: parse song
-        //data[instruments] = parse_song(tmp);
+        // printf("[%s]\n", tmp);
+        data[instruments] = parse_song(tmp);
         free(tmp);
         tmp = 0;
         instruments++;
+        data = realloc(data, instruments * sizeof(struct Song*));
       }
     }else{
       if(tmp){
         tmp = concat(tmp,buff);
       }else{
-        tmp = malloc(sizeof(char *) * strlen(buff));
-        strncpy(tmp, buff, strlen(buff) - 1);
+        tmp = calloc((strlen(buff)), sizeof(char *) );
+        tmp[strlen(buff)] = "\0";
+        strncpy(tmp, buff, strlen(buff)-1);
       }
     }
   }
-  printf("[%s]\n", tmp);
-  //data[instruments] = parse_song(tmp);
+  data[instruments] = parse_song(tmp);
   free(tmp);
   printf("load success!\n");
   fclose(fp);

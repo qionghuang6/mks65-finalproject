@@ -2,6 +2,6 @@
 b4 a4 g4 r
 \guitar
 b4 a4 g4 r
-g4 g4 g4 g4
+g4 g4 g4-b4-r r
 a4 a4 a4 a4
 b4 a4 g4 r
