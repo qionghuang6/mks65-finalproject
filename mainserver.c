@@ -104,7 +104,6 @@ int main(int argc, char const *argv[]) {
     input = "test.txt";
   }
   song = parseIn(input);
-  tick = follow(song,0);
 
 	if (connected > 0){
 		for (size_t i = 0; i < instruments; i++) {
@@ -114,8 +113,6 @@ int main(int argc, char const *argv[]) {
   while(connected > 0){
     signal(SIGINT, sighandler);
 		if(playstate == 1){
-    time++;
-    tick = follow(song,time);
     sleep(1);
     char writestring[255] = "";
     sprintf(writestring, "time elapsed: %d", time);
@@ -123,16 +120,34 @@ int main(int argc, char const *argv[]) {
 		if(rv == -1) {
 			perror("select");
 		} else{
-			for(size_t i = 0; i < instruments; i++) {
-				if(FD_ISSET(client_sockets[i], &read_fds)) {
-				  printf("SOMEOMEHTING LSOETHING SOMETHING\n");
-	        read(client_sockets[i], buffers[i], sizeof(buffers[i]));
-					printf("recieved: %s\n",buffers[i]);
-				}
-        if(tick[i]->chord[0] != 'r'){
-	         write(client_sockets[i], tick[i]->chord, sizeof(tick[i]->chord));
+      int i= 0;
+      struct Instruction** cycle = (struct Instruction**) malloc(sizeof(struct Instruction*));
+      while(i < instruments){
+        if(FD_ISSET(client_sockets[i], &read_fds)) {
+          printf("SOMEOMEHTING LSOETHING SOMETHING\n");
+          read(client_sockets[i], buffers[i], sizeof(buffers[i]));
+          printf("recieved: %s\n",buffers[i]);
         }
-	    }
+        if(song[i]->chlen > time){
+          printf("%d|%d",song[i]->chlen,time);
+          cycle[i] = song[i]->data[time];
+          printChord(cycle[i]);
+          // int q = 0;
+          // int mx = cycle[i]->clen;
+          // char * send[mx];
+          // while(q < mx){
+          //   send[q] =cycle[i]->chord[q];
+          //   q++;
+          // }
+          struct Instruction out = *cycle[i];
+          write(client_sockets[i], cycle[i], sizeof(cycle[i]));
+        }else{
+
+        }
+        i++;
+        cycle = (struct Instruction**) realloc(cycle, (i+1)* sizeof(struct Instruction*));
+      }
+      time++;
 		}
   }
 }

@@ -6,7 +6,7 @@
 int main(int argc, char **argv) {
 
   int server_socket;
-  struct Instruction buffer[BUFFER_SIZE];
+  struct Instruction* buffer;
 
   if (argc == 2)
     server_socket = client_setup( argv[1]);
@@ -27,10 +27,14 @@ int main(int argc, char **argv) {
     signal(SIGINT, sighandler);
     read(server_socket, buffer, sizeof(buffer));
     metronome();
+    int i = 0;
+    int mx = buffer->clen;
     char** notes = buffer->chord;
-    while (buffer->chord){
-    execute_note(notes);
+    while (i < mx){
+      printf("%s\n",notes[i]);
+    execute_note(notes[i]);
     notes++;
+    i++;
     }
   }
 }

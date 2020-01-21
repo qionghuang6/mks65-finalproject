@@ -13,18 +13,19 @@ struct Instruction* parse_chord(char * chord){
   char ** chord_arr = (char **)malloc(sizeof(char *));
   int i = 0;
   while (tmp != NULL){
-    //printf("<%s>\n",tmp);
-    char *dt = "";
+    printf("<%s>\n",tmp);
+    char *dt;
     if(tmp[0] != 'r'){
-      dt = malloc(sizeof(char) * (strlen(tmp)+strlen(pb)+strlen(pe)));
-      strcat(dt,pb);
+      dt = malloc(sizeof(char) * (strlen(tmp)+strlen(pb)+strlen(pe) +1));
+      strcpy(dt,pb);
       strcat(dt,tmp);
       strcat(dt,pe);
     }else{
       dt = malloc(sizeof(tmp));
-      strcat(dt,tmp);
+      strcpy(dt,tmp);
     }
     chord_arr[i] = dt;
+    printf("<%s>\n",dt);
     i++;
     chord_arr = (char **) realloc(chord_arr, (i+1) * sizeof(char *));
     tmp = strtok(NULL,"-");
@@ -41,7 +42,7 @@ struct Song* parse_song(char * song){
   out->data = (struct Instruction **) malloc(sizeof(struct Instruction *));
   int i = 0;
   while(tmp != NULL){
-    //printf("{%s}\n",tmp);
+    printf("{%s}\n",tmp);
     out->data[i] = parse_chord(tmp);
     i++;
     out->data = (struct Instruction **) realloc(out->data, (i+1) * sizeof(struct Instruction *));
@@ -116,27 +117,37 @@ struct Song ** parseIn(char* dir){
 }
 struct Instruction** follow(struct Song ** song,int tick){
   int inst = 0;
+  int isGood = 0;
   //printf("||||||%s\n",song[0]->data[3]->chord[0]);
   // printf("%d\n",song[inst]->data[tick];);
   struct Instruction** cycle = (struct Instruction**) malloc(sizeof(struct Instruction*));
   while(inst < NUM_INSTRUMENTS){
     if(song[inst]->chlen > tick){
+      printf("%d|%d",song[inst]->chlen,tick);
+
+      isGood = 1;
       cycle[inst] = song[inst]->data[tick];
-      //printChord(cycle[inst]);
+      printChord(cycle[inst]);
     }else{
-      cycle[inst] = 0;
+
     }
     inst++;
     cycle = (struct Instruction**) realloc(cycle, (inst+1)* sizeof(struct Instruction*));
   }
+  //cycle = (struct Instruction**) realloc(cycle, (inst)* sizeof(struct Instruction*));
   //printf("----------\n");
-  return cycle;
+  if(isGood){
+    printf("kkkk%pkkkkk\n",cycle);
+    return cycle;
+  }else{
+    return 0;
+  }
 }
 void printChord(struct Instruction* inst){
   int i = 0;
   int mx = inst->clen;
   while(i < mx){
-    printf("%s", inst->chord[i]);
+    printf("|%s|", inst->chord[i]);
     i++;
   }
   printf("\n");
