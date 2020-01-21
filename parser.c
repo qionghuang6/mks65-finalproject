@@ -8,7 +8,7 @@ char* parser_end = "";
 char * pb = "";
 char * pe = "";
 char * parse_note(char * note){
-  printf("<%s%s%s>",pb,note,pe);
+  printf("<%s%s%s>\n",pb,note,pe);
   char* out = parser_begin;
   // strcat(out,note);
   // strcat(out,parser_end);
@@ -19,16 +19,14 @@ struct Instruction* parse_chord(char * chord){
   char ** chord_arr = (char **)malloc(sizeof(char *));
   int i = 0;
   while (tmp != NULL){
-    // printf("<%s>\n",tmp);
+    //printf("<%s>\n",tmp);
     char *dt = tmp;
-    printf("dsfad");
     if(tmp[0] != 'r'){
       parse_note(dt);
     }
     // char * out = malloc(sizeof(char) * strlen(dt));
     char * out = malloc(sizeof(char) * strlen(dt));
     strcpy(out,dt);
-    printf("%s\n", out);
     chord_arr[i] = out;
     i++;
     chord_arr = (char **) realloc(chord_arr, (i+1) * sizeof(char *));
@@ -75,16 +73,14 @@ struct Song ** parseIn(char* dir){
     if(buff[0] == '/'){
       pb = parser_begin;
       pe = parser_end;
-      if(!strcmp(buff,"/piano\n")){
-        printf("runn piano");
-        parser_begin = "Piano.ff.";
+      if((!strcmp(buff,"/piano\n")) || (!strcmp(buff,"/piano\r\n"))){
+        parser_begin = "Piano/Piano.ff.";
         parser_end = ".wav";
-      } else if (!strcmp(buff,"/altosax\n")){
-        parser_begin = "AltoSax.vib.ff.";
+      } else if ((!strcmp(buff,"/altosax\n")) || (!strcmp(buff,"/altosax\r\n"))){
+        parser_begin = "AltoSax/AltoSax.vib.ff.";
         parser_end = ".stereo.wav";
-      } else if (!strcmp(buff,"/marimba\n")){
-        printf("runn piandsdo");
-        parser_begin = "Marimba.yarn.ff.";
+      } else if ((!strcmp(buff,"/marimba\n")) || (!strcmp(buff,"/marimba\r\n"))){
+        parser_begin = "Marimba/Marimba.yarn.ff.";
         parser_end = ".stereo.wav";
       }
       if(tmp){
@@ -107,6 +103,7 @@ struct Song ** parseIn(char* dir){
   }
   pb = parser_begin;
   pe = parser_end;
+  printf("[%s]\n",tmp);
   data[instruments] = parse_song(tmp);
   free(tmp);
   printf("load success!\n");
