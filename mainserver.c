@@ -121,7 +121,7 @@ int main(int argc, char const *argv[]) {
 			perror("select");
 		} else{
       int i= 0;
-      struct Instruction** cycle = (struct Instruction**) malloc(sizeof(struct Instruction*));
+      struct Instruction* cycle = (struct Instruction*) malloc(sizeof(struct Instruction));
       while(i < instruments){
         if(FD_ISSET(client_sockets[i], &read_fds)) {
           printf("SOMEOMEHTING LSOETHING SOMETHING\n");
@@ -130,13 +130,13 @@ int main(int argc, char const *argv[]) {
         }
         if(song[i]->chlen > time){
           printf("%d|%d",song[i]->chlen,time);
-          cycle[i] = song[i]->data[time];
-          printChord(cycle[i]);
+          cycle = song[i]->data[time];
+          printChord(cycle);
           int q = 0;
-          int mx = cycle[i]->clen;
+          int mx = cycle->clen;
           char * send[mx];
           while(q < mx){
-            send[q] =cycle[i]->chord[q];
+            send[q] =cycle->chord[q];
             q++;
           }
           write(client_sockets[i], send, sizeof(send));
@@ -146,6 +146,7 @@ int main(int argc, char const *argv[]) {
         i++;
         cycle = (struct Instruction**) realloc(cycle, (i+1)* sizeof(struct Instruction*));
       }
+      free(cycle);
       time++;
 		}
   }
