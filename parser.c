@@ -7,32 +7,29 @@ char* parser_begin = "";
 char* parser_end = "";
 char * pb = "";
 char * pe = "";
-char * parse_note(char * note){
-  printf("<%s%s%s>\n",pb,note,pe);
-  char* out = parser_begin;
-  // strcat(out,note);
-  // strcat(out,parser_end);
-  return out;
-}
+int INSTRUMENTS = 0;
 struct Instruction* parse_chord(char * chord){
   char *tmp = strtok(chord,"-");
   char ** chord_arr = (char **)malloc(sizeof(char *));
   int i = 0;
   while (tmp != NULL){
     //printf("<%s>\n",tmp);
-    char *dt = tmp;
+    char *dt = "";
     if(tmp[0] != 'r'){
-      parse_note(dt);
+      dt = malloc(sizeof(char) * (strlen(tmp)+strlen(pb)+strlen(pe)));
+      strcat(dt,pb);
+      strcat(dt,tmp);
+      strcat(dt,pe);
+    }else{
+      dt = malloc(sizeof(tmp));
+      strcat(dt,tmp);
     }
-    // char * out = malloc(sizeof(char) * strlen(dt));
-    char * out = malloc(sizeof(char) * strlen(dt));
-    strcpy(out,tmp);
-    chord_arr[i] = out;
+    chord_arr[i] = dt;
     i++;
     chord_arr = (char **) realloc(chord_arr, (i+1) * sizeof(char *));
     tmp = strtok(NULL,"-");
   }
-  struct Instruction ch = {chord_arr};
+  struct Instruction ch = {chord_arr,i};
   struct Instruction * out = (struct Instruction *) malloc(sizeof(struct Instruction));
   *out = ch;
   return out;
@@ -49,8 +46,10 @@ struct Song* parse_song(char * song){
     i++;
     out->data = (struct Instruction **) realloc(out->data, (i+1) * sizeof(struct Instruction *));
     tmp = strtok_r(dup," ",&dup);
-    // printf("%s",tmp);
+    //printf("%s",tmp);
   }
+  printf("%d",i);
+  out->chlen = i;
   //struct Song good = {song_data};
   //printf("dddd%sddd\n",out->data[0]->chord[0]);
   return out;
@@ -74,6 +73,7 @@ struct Song ** parseIn(char* dir){
   while (fgets(buff, sizeof(buff), fp)) {
     // printf("%s",buff);
     if(buff[0] == '/'){
+      INSTRUMENTS++;
       pb = parser_begin;
       pe = parser_end;
       if((!strcmp(buff,"/piano\n")) || (!strcmp(buff,"/piano\r\n"))){
@@ -114,6 +114,39 @@ struct Song ** parseIn(char* dir){
   fclose(fp);
   return data;
 }
-void follow_song(){
-  return 0;
+struct Instruction** follow(struct Song ** song,int tick){
+  int inst = 0;
+  printf("||||||%s\n",song[0]->data[3]->chord[0]);
+  // printf("%d\n",song[inst]->data[tick];);
+  struct Instruction** cycle = (struct Instruction**) malloc(sizeof(struct Instruction*));
+  while(inst < INSTRUMENTS){
+    if(song[inst]->chlen > tick){
+      cycle[inst] = song[inst]->data[tick];
+      printChord(cycle[inst]);
+    }else{
+      cycle[inst] = 0;
+    }
+    inst++;
+    cycle = (struct Instruction**) realloc(cycle, (inst+1)* sizeof(struct Instruction*));
+  }
+  printf("----------\n");
+  return cycle;
+}
+void printChord(struct Instruction* inst){
+  int i = 0;
+  int mx = inst->clen;
+  while(i < mx){
+    printf("%s", inst->chord[i]);
+    i++;
+  }
+  printf("\n");
+}
+void debugInstuctions(struct Instruction** follow){
+  int i = 0;
+  int mx = sizeof(follow)/sizeof(struct Instruction*);
+  for(i = 0; i < mx; i++){
+    if(follow[i]){
+        printChord(follow[i]);
+    }
+  }
 }
