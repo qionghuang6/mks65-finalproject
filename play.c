@@ -27,19 +27,14 @@ int execute_note(char* line){
 
   char s[150];
 int metronome(){
-  strncat(s, "aplay AltoSax/AltoSax.vib.ff.C4.stereo.wav", 50);
-  printf("%s\n", s);
+  strncat(s, "aplay Piano/Piano.ff.C4.wav", 50);
+  //printf("%s\n", s);
   while(1){
     pid_t p = fork();
     if (!p){
       execute_note(s);
     }
-    sleep(2);
+    sleep(1);
   }
   return 0;    
-}
-
-int main(){
-    metronome();
-    return 0;
 }
