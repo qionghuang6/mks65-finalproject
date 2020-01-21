@@ -6,7 +6,7 @@
 int main(int argc, char **argv) {
 
   int server_socket;
-  struct Instruction* buffer;
+  char * buffer[2056];
 
   if (argc == 2)
     server_socket = client_setup( argv[1]);
@@ -25,16 +25,20 @@ int main(int argc, char **argv) {
 
   while (1) {
     signal(SIGINT, sighandler);
-    read(server_socket, buffer, sizeof(buffer));
-    metronome();
-    int i = 0;
-    int mx = buffer->clen;
-    char** notes = buffer->chord;
-    while (i < mx){
-      printf("%s\n",notes[i]);
-    execute_note(notes[i]);
-    notes++;
-    i++;
+    int n = read(server_socket, buffer, sizeof(buffer));
+    if (n < 0){
+      printf("%s\n", strerror(n));
     }
+    metronome();
+    char s[100] = "aplay ";
+    size_t i;
+    int count = 10;
+    for(i = 0; i < count; i++){
+      strncat(s, buffer[i], 50);
+      printf("%s\n", s);
+      execute_note(s);
+    }
+
+    //execute_note()
   }
 }

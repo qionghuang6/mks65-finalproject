@@ -132,15 +132,14 @@ int main(int argc, char const *argv[]) {
           printf("%d|%d",song[i]->chlen,time);
           cycle[i] = song[i]->data[time];
           printChord(cycle[i]);
-          // int q = 0;
-          // int mx = cycle[i]->clen;
-          // char * send[mx];
-          // while(q < mx){
-          //   send[q] =cycle[i]->chord[q];
-          //   q++;
-          // }
-          struct Instruction out = *cycle[i];
-          write(client_sockets[i], cycle[i], sizeof(cycle[i]));
+          int q = 0;
+          int mx = cycle[i]->clen;
+          char * send[mx];
+          while(q < mx){
+            send[q] =cycle[i]->chord[q];
+            q++;
+          }
+          write(client_sockets[i], send, sizeof(send));
         }else{
 
         }
