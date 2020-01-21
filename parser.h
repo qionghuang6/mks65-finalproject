@@ -1,4 +1,5 @@
-int NUM_INSTRUMENTS;
+#ifndef PARSER_H
+#define PARSER_H
 struct Instruments{
   char * inst[3];
 };
@@ -14,3 +15,4 @@ char * parse_note(char* dt,char * note);
 struct Instruction* parse_chord(char * chord);
 struct Song* parse_song(char * song);
 struct Song ** parseIn(char* dir);
+#endif

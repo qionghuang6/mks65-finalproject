@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "parser.h"
-
+//Made by Kevin Cai
 char* parser_begin = "";
 char* parser_end = "";
 char * pb = "";
 char * pe = "";
-int INSTRUMENTS = 0;
+int NUM_INSTRUMENTS = 0;
 struct Instruction* parse_chord(char * chord){
   char *tmp = strtok(chord,"-");
   char ** chord_arr = (char **)malloc(sizeof(char *));
@@ -41,14 +41,14 @@ struct Song* parse_song(char * song){
   out->data = (struct Instruction **) malloc(sizeof(struct Instruction *));
   int i = 0;
   while(tmp != NULL){
-    printf("{%s}\n",tmp);
+    //printf("{%s}\n",tmp);
     out->data[i] = parse_chord(tmp);
     i++;
     out->data = (struct Instruction **) realloc(out->data, (i+1) * sizeof(struct Instruction *));
     tmp = strtok_r(dup," ",&dup);
     //printf("%s",tmp);
   }
-  printf("%d",i);
+  //printf("%d",i);
   out->chlen = i;
   //struct Song good = {song_data};
   //printf("dddd%sddd\n",out->data[0]->chord[0]);
@@ -73,7 +73,7 @@ struct Song ** parseIn(char* dir){
   while (fgets(buff, sizeof(buff), fp)) {
     // printf("%s",buff);
     if(buff[0] == '/'){
-      INSTRUMENTS++;
+      NUM_INSTRUMENTS++;
       pb = parser_begin;
       pe = parser_end;
       if((!strcmp(buff,"/piano\n")) || (!strcmp(buff,"/piano\r\n"))){
@@ -116,20 +116,20 @@ struct Song ** parseIn(char* dir){
 }
 struct Instruction** follow(struct Song ** song,int tick){
   int inst = 0;
-  printf("||||||%s\n",song[0]->data[3]->chord[0]);
+  //printf("||||||%s\n",song[0]->data[3]->chord[0]);
   // printf("%d\n",song[inst]->data[tick];);
   struct Instruction** cycle = (struct Instruction**) malloc(sizeof(struct Instruction*));
-  while(inst < INSTRUMENTS){
+  while(inst < NUM_INSTRUMENTS){
     if(song[inst]->chlen > tick){
       cycle[inst] = song[inst]->data[tick];
-      printChord(cycle[inst]);
+      //printChord(cycle[inst]);
     }else{
       cycle[inst] = 0;
     }
     inst++;
     cycle = (struct Instruction**) realloc(cycle, (inst+1)* sizeof(struct Instruction*));
   }
-  printf("----------\n");
+  //printf("----------\n");
   return cycle;
 }
 void printChord(struct Instruction* inst){
@@ -140,13 +140,4 @@ void printChord(struct Instruction* inst){
     i++;
   }
   printf("\n");
-}
-void debugInstuctions(struct Instruction** follow){
-  int i = 0;
-  int mx = sizeof(follow)/sizeof(struct Instruction*);
-  for(i = 0; i < mx; i++){
-    if(follow[i]){
-        printChord(follow[i]);
-    }
-  }
 }

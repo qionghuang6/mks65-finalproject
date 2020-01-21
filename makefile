@@ -17,12 +17,12 @@ networking.o: networking.c networking.h
 	gcc -c networking.c
 
 play.o: play.c play.h
-	gcc -c play.c 
-	
+	gcc -c play.c
+
 test.o: test.c
 	gcc -c test.c
 
-parser.o: parser.c
+parser.o: parser.c parser.h
 	gcc -c parser.c
 
 clean:

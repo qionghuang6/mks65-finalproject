@@ -1,5 +1,5 @@
 #include "networking.h"
-
+#include "parser.h"
 void process(char *s);
 void subserver(int from_client);
 
@@ -21,6 +21,9 @@ char * read_file(char * dir){
 int main(int argc, char const *argv[]) {
   int instruments;
   int connected;
+  char * input;
+  struct Song ** song;
+  struct Instruction ** tick;
   int listen_socket;
 	int rv;
   int client_sockets[64];
@@ -93,6 +96,16 @@ int main(int argc, char const *argv[]) {
       songchoice = atoi(songentered);
     }
   }
+  if(songchoice == 1){
+    input = "Sheet Music/Hot Cross Buns";
+  } else if (songchoice == 2){
+    input = "Sheet Music/its-a-small-world.txt";
+  } else {
+    input = "test.txt";
+  }
+  song = parseIn(input);
+  tick = follow(song,0);
+
 	if (connected > 0){
 		for (size_t i = 0; i < instruments; i++) {
 			write(client_sockets[i], "Connection Established", 30);
@@ -102,6 +115,7 @@ int main(int argc, char const *argv[]) {
     signal(SIGINT, sighandler);
 		if(playstate == 1){
     time++;
+    tick = follow(song,time);
     sleep(1);
     char writestring[255] = "";
     sprintf(writestring, "time elapsed: %d", time);
@@ -111,11 +125,13 @@ int main(int argc, char const *argv[]) {
 		} else{
 			for(size_t i = 0; i < instruments; i++) {
 				if(FD_ISSET(client_sockets[i], &read_fds)) {
-				printf("SOMEOMEHTING LSOETHING SOMETHING\n");
+				  printf("SOMEOMEHTING LSOETHING SOMETHING\n");
 	        read(client_sockets[i], buffers[i], sizeof(buffers[i]));
 					printf("recieved: %s\n",buffers[i]);
 				}
-	      write(client_sockets[i], writestring, sizeof(writestring));
+        if(tick[i]->chord[0] != 'r'){
+	         write(client_sockets[i], tick[i]->chord, sizeof(tick[i]->chord));
+        }
 	    }
 		}
   }
