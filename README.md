@@ -3,7 +3,7 @@
 
 Kevin Cai, Eric Chen, Qiong Huang
 
-How to Run
+### How to Run
 - Use make server and make client to compile.
 - Run server using:
 ./server [number of clients]
@@ -53,3 +53,17 @@ b4 a4 g4 r
 
 ## Data structures:
 Each text file will be converted into a list of notes. 
+
+###Devlog
+- Qiong:
+-- Tuesday: Played with networking code and got basic one way communication between server and client
+-- Thursday: Began working on multi threads with select
+-- Monday: Finished multi threads and using signals to play and pause
+- Eric:
+-- Tuesday: Found mp3 files online for instruments, converted to wav file to use with aplay
+-- Thursday: Wrote code for aplaying and execing the music files 
+-- Monday: Implemented aplay and exec code into client
+- Kevin
+-- Tuesday: Wrote parser for music text files
+-- Thursday-Friday: Wrote structs for holding notes and chords
+-- Monday/Tuesday: Implemented structs and finished connection between server and client
