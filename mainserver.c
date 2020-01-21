@@ -89,7 +89,7 @@ int main(int argc, char const *argv[]) {
   while (songchoice < 0){
     char songentered[8];
     printf("Choose a song!\n");
-    printf("1: Hot Cross Buns\n2: Fortunate Son\n");
+    printf("1: Hot Cross Buns(1 instrument)\n2: Fortunate Son(2 instruments)\n");
     fgets(songentered,7, stdin);
     printf("%d\n", atoi(songentered));
     if(atoi(songentered) < songpossibilities + 1 && atoi(songentered) > 0){
@@ -135,16 +135,22 @@ int main(int argc, char const *argv[]) {
           int q = 0;
           int mx = cycle->clen;
           char * send[mx];
+          printf("Sending ");
           while(q < mx){
-            send[q] =cycle->chord[q];
+            if((cycle->chord[q])[0] != 'r'){
+              printf(" %s ", cycle->chord[q]);
+              send[q] =cycle->chord[q];
+            } else {
+              send[q] = 0;
+            }
             q++;
           }
+          printf(" to %d\n", i);
           write(client_sockets[i], send, sizeof(send));
         }else{
 
         }
         i++;
-        cycle = (struct Instruction**) realloc(cycle, (i+1)* sizeof(struct Instruction*));
       }
       free(cycle);
       time++;
