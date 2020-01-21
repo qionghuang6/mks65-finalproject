@@ -1,12 +1,13 @@
 #include <string.h>
 #include <stdlib.h>
-struct Instruction {
-    int cmdType;
-    char ** chord;
-};
-struct Song{
-  struct Instruction ** data;
-};
+#include <stdio.h>
+#include "parser.h"
+
+const struct Instruments{
+  char *inst[3];
+} Instruments = {"Piano" , "Marimba", "AltoSax"};
+const int NUM_INSTRUMENTS = sizeof(Instruments.inst);
+
 char * parse_note(char * note, char * start, char * end){
   char* out = start;
   strcat(out,note);
@@ -30,6 +31,10 @@ struct Song* parse_song(char * song){
   char ** chord_arr = (char **)calloc(1, sizeof(char *));
   int i = 0;
   while(*song){
+    song = strtok(song," ");
+    chord_arr[i] = parse_chord(song);
+    chord_arr = (char **) realloc(i+1, sizeof(char *));
+    i++;
     song++;
   }
   //TODO: finish this func
@@ -46,6 +51,49 @@ struct Song ** parse_file(char * song){
     i++;
   }
   return output;
+}
+char* concat(char *s1, const char *s2)
+{
+    char *result = malloc(strlen(s1) + strlen(s2) + 1);
+    strcpy(result, s1);
+    free(s1);
+    strcat(result, " ");
+    strncat(result, s2, strlen(s2) - 1);
+    return result;
+}
+struct Song ** parseIn(char* dir){
+  char buff[1024];
+  int instruments = 0;
+  struct Song** data = malloc(sizeof(struct Song*) * NUM_INSTRUMENTS);
+  char* tmp = 0;
+  FILE *fp;
+  fp = fopen(dir, "r");
+  while (fgets(buff, sizeof(buff), fp)) {
+    printf("%s",buff);
+    if(buff[0] == '\\'){
+      if(tmp){
+        printf("[%s]\n", tmp);
+        //TODO: parse song
+        //data[instruments] = parse_song(tmp);
+        free(tmp);
+        tmp = 0;
+        instruments++;
+      }
+    }else{
+      if(tmp){
+        tmp = concat(tmp,buff);
+      }else{
+        tmp = malloc(sizeof(char *) * strlen(buff));
+        strncpy(tmp, buff, strlen(buff) - 1);
+      }
+    }
+  }
+  printf("[%s]\n", tmp);
+  //data[instruments] = parse_song(tmp);
+  free(tmp);
+  printf("load success!\n");
+  fclose(fp);
+  return data;
 }
 void follow_song(){
   return 0;
