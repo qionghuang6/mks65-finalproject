@@ -3,10 +3,15 @@
 #include <stdio.h>
 #include "parser.h"
 
-char * parse_note(char * note, char * start, char * end){
-  char* out = start;
-  strcat(out,note);
-  strcat(out,end);
+char* parser_begin = "";
+char* parser_end = "";
+char * pb = "";
+char * pe = "";
+char * parse_note(char * note){
+  printf("<%s%s%s>",pb,note,pe);
+  char* out = parser_begin;
+  // strcat(out,note);
+  // strcat(out,parser_end);
   return out;
 }
 struct Instruction* parse_chord(char * chord){
@@ -15,7 +20,16 @@ struct Instruction* parse_chord(char * chord){
   int i = 0;
   while (tmp != NULL){
     // printf("<%s>\n",tmp);
-    chord_arr[i] = tmp;
+    char *dt = tmp;
+    printf("dsfad");
+    if(tmp[0] != 'r'){
+      parse_note(dt);
+    }
+    // char * out = malloc(sizeof(char) * strlen(dt));
+    char * out = malloc(sizeof(char) * strlen(dt));
+    strcpy(out,dt);
+    printf("%s\n", out);
+    chord_arr[i] = out;
     i++;
     chord_arr = (char **) realloc(chord_arr, (i+1) * sizeof(char *));
     tmp = strtok(NULL,"-");
@@ -31,7 +45,7 @@ struct Song* parse_song(char * song){
   struct Instruction ** song_data = malloc(sizeof(struct Instruction *));
   int i = 0;
   while(tmp != NULL){
-    // printf("{%s}\n",tmp);
+    printf("{%s}\n",tmp);
     song_data[i] = parse_chord(tmp);
     i++;
     song_data = (struct Instruction **) realloc(song_data, (i+1) * sizeof(struct Instruction *));
@@ -58,9 +72,23 @@ struct Song ** parseIn(char* dir){
   fp = fopen(dir, "r");
   while (fgets(buff, sizeof(buff), fp)) {
     // printf("%s",buff);
-    if(buff[0] == '\\'){
+    if(buff[0] == '/'){
+      pb = parser_begin;
+      pe = parser_end;
+      if(!strcmp(buff,"/piano\n")){
+        printf("runn piano");
+        parser_begin = "Piano.ff.";
+        parser_end = ".wav";
+      } else if (!strcmp(buff,"/altosax\n")){
+        parser_begin = "AltoSax.vib.ff.";
+        parser_end = ".stereo.wav";
+      } else if (!strcmp(buff,"/marimba\n")){
+        printf("runn piandsdo");
+        parser_begin = "Marimba.yarn.ff.";
+        parser_end = ".stereo.wav";
+      }
       if(tmp){
-        // printf("[%s]\n", tmp);
+         printf("[%s]\n", tmp);
         data[instruments] = parse_song(tmp);
         free(tmp);
         tmp = 0;
@@ -77,6 +105,8 @@ struct Song ** parseIn(char* dir){
       }
     }
   }
+  pb = parser_begin;
+  pe = parser_end;
   data[instruments] = parse_song(tmp);
   free(tmp);
   printf("load success!\n");
