@@ -1,8 +1,8 @@
 server: mainserver.o networking.o parser.o
 	gcc -o server mainserver.o networking.o parser.o
 
-client: client.o networking.o
-	gcc -o client client.o networking.o
+client: client.o networking.o play.o
+	gcc -o client client.o networking.o play.o
 
 tst: test.o parser.o
 	gcc -o tst test.o parser.o
@@ -16,6 +16,9 @@ mainserver.o: mainserver.c networking.h
 networking.o: networking.c networking.h
 	gcc -c networking.c
 
+play.o: play.c play.h
+	gcc -c play.c 
+	
 test.o: test.c
 	gcc -c test.c
 
