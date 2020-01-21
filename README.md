@@ -28,15 +28,15 @@ Chords
 ## Examples of sheet music: 
 ### Cmaj
 ```
-\instrument piano
+/piano
 c4-e4-g4
 ```
 
 ### Hot Cross Buns
 ```
-\instrument piano
+/piano
 b4 a4 g4 r
-\instrument guitar
+/marimba
 b4 a4 g4 r
 g4 g4 g4 g4 
 a4 a4 a4 a4
