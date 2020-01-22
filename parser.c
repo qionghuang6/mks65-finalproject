@@ -73,6 +73,10 @@ struct Song ** parseIn(char* dir){
   char* tmp = 0;
   FILE *fp;
   fp = fopen(dir, "r");
+  if (fp == NULL) {
+    perror("File is not found!");
+    exit(EXIT_FAILURE);
+  }
   while (fgets(buff, sizeof(buff), fp)) {
     // printf("%s",buff);
     if(buff[0] == '/'){

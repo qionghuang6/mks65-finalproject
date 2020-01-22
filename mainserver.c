@@ -32,7 +32,7 @@ int main(int argc, char const *argv[]) {
   int time = 0;
   int paused = 0;
   int songchoice = -1;
-  int songpossibilities = 3;
+  int songpossibilities = 4;
 	int playstate = 1;
 
 	void sighandler(int signo) {
@@ -67,7 +67,7 @@ int main(int argc, char const *argv[]) {
   while (songchoice < 0){
     char songentered[8];
     printf("Choose a song!\n");
-    printf("1: Hot Cross Buns(Piano)\n2: It's a small world(Piano)\n3:test(Piano,Marimba)");
+    printf("1: Hot Cross Buns(Piano)\n2: It's a small world(Piano)\n3:test(Piano,Marimba)\n4:Your own music");
     fgets(songentered,7, stdin);
     printf("%d\n", atoi(songentered));
     if(atoi(songentered) < songpossibilities + 1 && atoi(songentered) > 0){
@@ -78,8 +78,15 @@ int main(int argc, char const *argv[]) {
     input = "Sheet Music/Hot Cross Buns";
   } else if (songchoice == 2){
     input = "Sheet Music/its-a-small-world.txt";
-  } else {
+  } else if (songchoice == 3){
     input = "test.txt";
+  } else{
+    char tmp[256];
+    printf("Your file:\n");
+    fgets(tmp,256, stdin);
+    tmp[strlen(tmp)-1] = '\0';
+    input = tmp;
+    printf("%s",input);
   }
   song = parseIn(input);
   song_instruments= getnum();
