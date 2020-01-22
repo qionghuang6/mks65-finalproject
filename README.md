@@ -6,7 +6,7 @@ Kevin Cai, Eric Chen, Qiong Huang
 ### How to Run
 - Use make server and make client to compile.
 - Run server using:
-./server [number of clients]
+./server
 - Run each client using:
 ./client [ip of server]
 - Play and Pause using Ctrl + C (Note this only works on the server), not being able to pause and play on the client is a bug
@@ -16,7 +16,7 @@ Our project is to create a computer orchestra. A user will feed a piece of “sh
 1. User creates the sheet music as a text file
 2. User connects main computer to other computers
 3. User chooses instruments for each computer
-4. The main computer reads the sheet music, and tells each other computer what notes to play and when 
+4. The main computer reads the sheet music, and tells each other computer what notes to play and when
 
 ## Working With Files:
 - The program will read and parse each piece of sheet music using read().  
@@ -37,18 +37,18 @@ Chords
 ### Cmaj
 ```
 /piano
-c4-e4-g4
+C4-E4-G4
 ```
 
 ### Hot Cross Buns
 ```
 /piano
-b4 a4 g4 r
+B4 A4 G4 r
 /marimba
-b4 a4 g4 r
-g4 g4 g4 g4 
-a4 a4 a4 a4
-b4 a4 g4 r
+B4 A4 G4 r
+G4 G4 G4 G4 
+A4 A4 A4 A4
+B4 A4 G4 r
 ```
 
 ## Data structures:
@@ -64,6 +64,9 @@ Each text file will be converted into a list of notes.
  * Thursday: Wrote code for aplaying and execing the music files 
  * Monday: Implemented aplay and exec code into client
 ### Kevin
- * Tuesday: Wrote parser for music text files
- * Thursday-Friday: Wrote structs for holding notes and chords 
- * Monday/Tuesday: Implemented structs and finished connection between server and client. Debugging
+ * Friday-Monday(10-13): Figure out the general structure of the project
+ * Tuesday(14): Wrote parser for music text files
+ * Wednesday(15): fixed bugs for line endings
+ * Thursday-Friday(16-17): Wrote structs for holding notes and chords 
+ * Saturday-Sunday(18-19): Attempt to fix bugs between server and client
+ * Monday/Tuesday(20-21): Implemented structs and finished connection between server and client, added chord functionality
