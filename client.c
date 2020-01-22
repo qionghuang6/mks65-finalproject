@@ -31,14 +31,15 @@ int main(int argc, char **argv) {
     }
     printf("<<<%s>>>>\n", buffer);
     // metronome();
-    // char s[100] = "aplay ";
-    // size_t i;
-    // int count = 10;
-    // for(i = 0; i < count; i++){
-    //   strncat(s, buffer[i], 50);
-    //   printf("%s\n", s);
-    //   execute_note(s);
-    // }
+    char s[100] = "aplay ";
+    
+    strncat(s, buffer, 100);
+    pid_t p = fork();
+    if (!p){
+      execute_note(s);
+    }
+    sleep(1);
+  
 
     //execute_note()
   }

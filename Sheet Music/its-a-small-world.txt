@@ -1,11 +1,11 @@
 /piano
-e4 f4 g4 e4
-c4 d4 c4 c4
-b4 b4 d4 e4
-f4 d4 b4 c4
-b4 a4 g3 g3
-e4 f4 g4 c4
-d4 e4 d4 c4
-a4 d4 e4 f4
-e4 d4 g3 f4
-e4-a4 d4-b4 c c4-e3-g3 r
+E4 F4 G4 E4
+C4 D4 C4 C4
+B4 B4 D4 E4
+F4 D4 B4 C4
+B4 A4 G3 G3
+E4 F4 G4 C4
+D4 E4 D4 C4
+A4 D4 E4 F4
+E4 D4 G3 F4
+E4-A4 D4-B4 C C4-E3-G3 r
