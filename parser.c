@@ -60,8 +60,7 @@ char* concat(char *s1, const char *s2){
     strcpy(result, s1);
     free(s1);
     strcat(result, " ");
-    // printf("%s",result);
-    strncat(result, s2, strlen(s2) - 1);
+    strncat(result, s2,strlen(s2)-2);
     return result;
 }
 int getnum(){
@@ -103,8 +102,7 @@ struct Song ** parseIn(char* dir){
         tmp = concat(tmp,buff);
       }else{
         tmp = calloc((strlen(buff)), sizeof(char *) );
-        tmp[strlen(buff)] = "\0";
-        strncpy(tmp, buff, strlen(buff)-1);
+        strncpy(tmp, buff,strlen(buff) -2);
       }
     }
   }

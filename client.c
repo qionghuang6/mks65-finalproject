@@ -6,7 +6,7 @@
 int main(int argc, char **argv) {
 
   int server_socket;
-  char buffer[2056];
+  char buffer[32][200];
 
   if (argc == 2)
     server_socket = client_setup( argv[1]);
@@ -29,17 +29,30 @@ int main(int argc, char **argv) {
     if (n < 0){
       printf("%s\n", strerror(n));
     }
-    printf("<<<%s>>>>\n", buffer);
-    // metronome();
-    char s[100] = "aplay ";
-    
-    strncat(s, buffer, 100);
-    pid_t p = fork();
-    if (!p){
-      execute_note(s);
+    int i = 0;
+    for(i = 0; strlen(buffer[i]);i++){
+      char s[100] = "aplay ";
+      strncat(s, buffer[i], 100);
+      pid_t p = fork();
+      if (!p){
+        printf("<<%s>>\n",s);
+        execute_note(s);
+        exit(0);
+      }
     }
+    printf("\n");
+    memset(buffer,'\0',sizeof(buffer));
+    // metronome();
+    // // for(i =0; i < )
+    // char s[100] = "aplay ";
+    // strncat(s, buffer, 100);
+    // pid_t p = fork();
+    // if (!p){
+    //   execute_note(s);
+    //   exit(0);
+    // }
     sleep(1);
-  
+
 
     //execute_note()
   }

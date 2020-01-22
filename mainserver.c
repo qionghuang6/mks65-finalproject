@@ -67,7 +67,7 @@ int main(int argc, char const *argv[]) {
   while (songchoice < 0){
     char songentered[8];
     printf("Choose a song!\n");
-    printf("1: Hot Cross Buns(Piano)\n2: Fortunate Son(Piano)\n3:test(Piano,Marimba)");
+    printf("1: Hot Cross Buns(Piano)\n2: It's a small world(Piano)\n3:test(Piano,Marimba)");
     fgets(songentered,7, stdin);
     printf("%d\n", atoi(songentered));
     if(atoi(songentered) < songpossibilities + 1 && atoi(songentered) > 0){
@@ -104,11 +104,11 @@ int main(int argc, char const *argv[]) {
   for (size_t i = 0; i < instruments; i++) {
     FD_SET(client_sockets[i], &read_fds);
   }
-	if (connected > 0){
-		for (size_t i = 0; i < instruments; i++) {
-			write(client_sockets[i], "Connection Established", 30);
-		}
-	}
+	// if (connected > 0){
+	// 	for (size_t i = 0; i < instruments; i++) {
+	// 		write(client_sockets[i], "Connection Established", 30);
+	// 	}
+	// }
   while(connected > 0){
     signal(SIGINT, sighandler);
 		if(playstate == 1){
@@ -127,32 +127,31 @@ int main(int argc, char const *argv[]) {
           read(client_sockets[i], buffers[i], sizeof(buffers[i]));
           printf("recieved: %s\n",buffers[i]);
         }
-        printf("fffff%dfffff\n",i%song_instruments);
         if(song[i%song_instruments]->chlen > time){
           printf("%d|%d",song[i%song_instruments]->chlen,time);
           cycle = song[i%song_instruments]->data[time];
           printChord(cycle);
           int q = 0;
           int mx = cycle->clen;
-          char * send[mx];
+          char send[mx][200];
           int canSend = 1;
           int size = 0;
           printf("Sending to %d:",i);
           while(q < mx){
             if((cycle->chord[q])[0] != 'r'){
-              printf(" %s ", cycle->chord[q]);
-              send[q] = cycle->chord[q];
+              printf("| %s |", cycle->chord[q]);
+              strcpy(send[q],cycle->chord[q]);
               size += strlen(send[q]);
             } else {
               canSend = 0;
-              send[q] = 0;
               break;
             }
             q++;
           }
+          memset(send[q], '\0', sizeof(send[q]));
           printf("\n");
           if(canSend){
-            write(client_sockets[i], send[0], strlen(send[0]) * sizeof(char*));
+            write(client_sockets[i], send, mx * 200 * sizeof(char));
           }else{
             printf("nevermind, no send because rest\n");
           }
