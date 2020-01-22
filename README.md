@@ -64,6 +64,9 @@ Each text file will be converted into a list of notes.
  * Thursday: Wrote code for aplaying and execing the music files 
  * Monday: Implemented aplay and exec code into client
 ### Kevin
- * Tuesday: Wrote parser for music text files
- * Thursday-Friday: Wrote structs for holding notes and chords 
- * Monday/Tuesday(20-21): Implemented structs and finished connection between server and client. Debugging
+ * Friday-Monday(10-13): Figure out the general structure of the project
+ * Tuesday(14): Wrote parser for music text files
+ * Wednesday(15): fixed bugs for line endings
+ * Thursday-Friday(16-17): Wrote structs for holding notes and chords 
+ * Saturday-Sunday(18-19): Attempt to fix bugs between server and client
+ * Monday/Tuesday(20-21): Implemented structs and finished connection between server and client, added chord functionality
