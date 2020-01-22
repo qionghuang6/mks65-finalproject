@@ -23,7 +23,7 @@ int main(int argc, char const *argv[]) {
   int connected;
   char * input;
   struct Song ** song;
-  struct Instruction ** tick;
+  struct Instruction * cycle;
   int listen_socket;
 	int rv;
   int client_sockets[64];
@@ -121,7 +121,6 @@ int main(int argc, char const *argv[]) {
 			perror("select");
 		} else{
       int i= 0;
-      struct Instruction* cycle = (struct Instruction*) malloc(sizeof(struct Instruction));
       while(i < instruments){
         if(FD_ISSET(client_sockets[i], &read_fds)) {
           printf("SOMEOMEHTING LSOETHING SOMETHING\n");
@@ -139,7 +138,7 @@ int main(int argc, char const *argv[]) {
           while(q < mx){
             if((cycle->chord[q])[0] != 'r'){
               printf(" %s ", cycle->chord[q]);
-              send[q] =cycle->chord[q];
+              send[q] = cycle->chord[q];
             } else {
               send[q] = 0;
             }
@@ -152,7 +151,6 @@ int main(int argc, char const *argv[]) {
         }
         i++;
       }
-      free(cycle);
       time++;
 		}
   }
