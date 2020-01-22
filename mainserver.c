@@ -31,7 +31,7 @@ int main(int argc, char const *argv[]) {
   int time = 0;
   int paused = 0;
   int songchoice = -1;
-  int songpossibilities = 2;
+  int songpossibilities = 3;
 	int playstate = 1;
 
 	void sighandler(int signo) {
@@ -89,7 +89,7 @@ int main(int argc, char const *argv[]) {
   while (songchoice < 0){
     char songentered[8];
     printf("Choose a song!\n");
-    printf("1: Hot Cross Buns(1 instrument)\n2: Fortunate Son(2 instruments)\n");
+    printf("1: Hot Cross Buns(max 1 instrument)\n2: Fortunate Son(max 2 instruments)\n");
     fgets(songentered,7, stdin);
     printf("%d\n", atoi(songentered));
     if(atoi(songentered) < songpossibilities + 1 && atoi(songentered) > 0){
@@ -104,7 +104,7 @@ int main(int argc, char const *argv[]) {
     input = "test.txt";
   }
   song = parseIn(input);
-
+  instruments= getnum();
 	if (connected > 0){
 		for (size_t i = 0; i < instruments; i++) {
 			write(client_sockets[i], "Connection Established", 30);
@@ -134,18 +134,26 @@ int main(int argc, char const *argv[]) {
           int q = 0;
           int mx = cycle->clen;
           char * send[mx];
-          printf("Sending ");
+          int canSend = 1;
+          int size = 0;
+          printf("Sending to %d:",i);
           while(q < mx){
             if((cycle->chord[q])[0] != 'r'){
               printf(" %s ", cycle->chord[q]);
               send[q] = cycle->chord[q];
             } else {
+              canSend = 0;
               send[q] = 0;
+              break;
             }
             q++;
           }
-          printf(" to %d\n", i);
-          write(client_sockets[i], send, sizeof(send));
+          printf("\n");
+          if(canSend){
+            write(client_sockets[i], send[0], strlen(send[0]) * sizeof(char*));
+          }else{
+            printf("nevermind, no send because rest\n");
+          }
         }else{
 
         }

@@ -64,6 +64,9 @@ char* concat(char *s1, const char *s2){
     strncat(result, s2, strlen(s2) - 1);
     return result;
 }
+int getnum(){
+  return NUM_INSTRUMENTS;
+}
 struct Song ** parseIn(char* dir){
   char buff[1024];
   int instruments = 0;
