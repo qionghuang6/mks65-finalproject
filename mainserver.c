@@ -20,6 +20,7 @@ char * read_file(char * dir){
 
 int main(int argc, char const *argv[]) {
   int instruments;
+  int song_instruments;
   int connected;
   char * input;
   struct Song ** song;
@@ -46,7 +47,6 @@ int main(int argc, char const *argv[]) {
 			} else if(playstate == 0){
 				printf("PLAYING\n");
 				playstate = 1;
-				time++;
 				for(size_t i = 0; i < instruments; i++) {
 				// write(client_sockets[i], "PLAYING", sizeof(20));
 				}
@@ -64,32 +64,10 @@ int main(int argc, char const *argv[]) {
 	tv.tv_sec = 1;
   tv.tv_usec = 500000;
 
-  if(argc <= 1){
-    printf("Proper Usage: ./server [NUMBER OF INSTRUMENTS]\n" );
-    return 1;
-  }else{
-    instruments = atoi(argv[1]);
-    connected = 0;
-  }
-	char buffers[BUFFER_SIZE][instruments];
-  listen_socket = server_setup();
-
-  while (clientnum < instruments) {
-    client_sockets[clientnum] = server_connect(listen_socket);
-    clientnum++;
-    connected++;
-    printf("Connected %d/%d\n", connected, instruments);
-  }
-
-	FD_ZERO(&read_fds);
-	for (size_t i = 0; i < instruments; i++) {
-		FD_SET(client_sockets[i], &read_fds);
-	}
-
   while (songchoice < 0){
     char songentered[8];
     printf("Choose a song!\n");
-    printf("1: Hot Cross Buns(max 1 instrument)\n2: Fortunate Son(max 2 instruments)\n");
+    printf("1: Hot Cross Buns(Piano)\n2: Fortunate Son(Piano)\n3:test(Piano,Marimba)");
     fgets(songentered,7, stdin);
     printf("%d\n", atoi(songentered));
     if(atoi(songentered) < songpossibilities + 1 && atoi(songentered) > 0){
@@ -104,7 +82,28 @@ int main(int argc, char const *argv[]) {
     input = "test.txt";
   }
   song = parseIn(input);
-  instruments= getnum();
+  song_instruments= getnum();
+  char numInst[16];
+  printf("Enter number of Instruments:");
+  fgets(numInst,7, stdin);
+  instruments = atoi(numInst);
+  connected = 0;
+
+
+  char buffers[BUFFER_SIZE][instruments];
+  listen_socket = server_setup();
+
+  while (clientnum < instruments) {
+    client_sockets[clientnum] = server_connect(listen_socket);
+    clientnum++;
+    connected++;
+    printf("Connected %d/%d\n", connected, instruments);
+  }
+
+  FD_ZERO(&read_fds);
+  for (size_t i = 0; i < instruments; i++) {
+    FD_SET(client_sockets[i], &read_fds);
+  }
 	if (connected > 0){
 		for (size_t i = 0; i < instruments; i++) {
 			write(client_sockets[i], "Connection Established", 30);
@@ -122,14 +121,16 @@ int main(int argc, char const *argv[]) {
 		} else{
       int i= 0;
       while(i < instruments){
+        printf("inst. number %d\n",i);
         if(FD_ISSET(client_sockets[i], &read_fds)) {
           printf("SOMEOMEHTING LSOETHING SOMETHING\n");
           read(client_sockets[i], buffers[i], sizeof(buffers[i]));
           printf("recieved: %s\n",buffers[i]);
         }
-        if(song[i]->chlen > time){
-          printf("%d|%d",song[i]->chlen,time);
-          cycle = song[i]->data[time];
+        printf("fffff%dfffff\n",i%song_instruments);
+        if(song[i%song_instruments]->chlen > time){
+          printf("%d|%d",song[i%song_instruments]->chlen,time);
+          cycle = song[i%song_instruments]->data[time];
           printChord(cycle);
           int q = 0;
           int mx = cycle->clen;
@@ -141,6 +142,7 @@ int main(int argc, char const *argv[]) {
             if((cycle->chord[q])[0] != 'r'){
               printf(" %s ", cycle->chord[q]);
               send[q] = cycle->chord[q];
+              size += strlen(send[q]);
             } else {
               canSend = 0;
               send[q] = 0;
